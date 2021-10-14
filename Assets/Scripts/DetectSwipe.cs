@@ -4,16 +4,21 @@ using UnityEngine;
 
 public class DetectSwipe : MonoBehaviour
 {
+
     private Vector3 startTouchPosition;
     private Vector3 currentPosition;
     private Vector3 endTouchPosition;
     private Vector3 distance;
     private bool stopTouch = false;
-    public float swipeDistance;
+    private float swipeDistance;
 
-    public float xAxis;
+    public bool isBreaking;
+    [HideInInspector] public float xAxis;
     public float swipeRange;
     public float tapRange;
+
+    [SerializeField] private Transform car;
+
 
     void Update()
     {
@@ -33,6 +38,11 @@ public class DetectSwipe : MonoBehaviour
             currentPosition = Input.GetTouch(0).position;
             distance = currentPosition - startTouchPosition;
             swipeDistance = currentPosition.x / startTouchPosition.x;
+
+            if (swipeDistance > 1)
+                swipeDistance = 1;
+            else if(swipeDistance < -1)
+                swipeDistance = -1;
         }
 
         if (!stopTouch)
@@ -53,12 +63,13 @@ public class DetectSwipe : MonoBehaviour
             {
                 Debug.Log("up");
                 stopTouch = true;
-            }
+            }*/
             else if (distance.y < -swipeRange)
             {
                 Debug.Log("down");
                 stopTouch = true;
-            }*/
+                isBreaking = true;
+            }
         }
 
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
@@ -70,15 +81,16 @@ public class DetectSwipe : MonoBehaviour
             xAxis = 0;
             distance = Vector3.zero;
             currentPosition = Vector3.zero;
+            //car.rotation = Quaternion.identity;
  
             stopTouch = false;
+            //isBreaking = false;
 
             //endTouchPosition = Input.GetTouch(0).position;
 
-            //xAxis = 0;
-            /*distance = endTouchPosition - startTouchPosition;
+            //distance = endTouchPosition - startTouchPosition;
 
-            if (Mathf.Abs(distance.x) < tapRange && Mathf.Abs(distance.y) < tapRange)
+            /*if (Mathf.Abs(distance.x) < tapRange && Mathf.Abs(distance.y) < tapRange)
             {
                 Debug.Log("tap");
             }*/

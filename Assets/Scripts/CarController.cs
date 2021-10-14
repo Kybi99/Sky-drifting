@@ -12,9 +12,9 @@ public class CarController : MonoBehaviour
     private float verticalInput;
     private float currentSteerAngle;
     private float currentbreakForce;
-    private bool isBreaking;
 
     [SerializeField] private DetectSwipe detectSwipe;
+   
 
     [SerializeField] private float motorForce;
     [SerializeField] private float breakForce;
@@ -42,22 +42,24 @@ public class CarController : MonoBehaviour
     private void GetInput()
     {
         horizontalInput = detectSwipe.xAxis;
-        /*verticalInput = Input.GetAxis(VERTICAL);
-        isBreaking = Input.GetKey(KeyCode.Space);*/
+        /*verticalInput = Input.GetAxis(VERTICAL);*/
+        //isBreaking = Input.touchCount > 1;
     }
 
     private void HandleMotor()
     {
         frontLeftWheelCollider.motorTorque = motorForce;
         frontRightWheelCollider.motorTorque = motorForce;
-        currentbreakForce = isBreaking ? breakForce : 0f;
+        /*rearLeftWheelCollider.motorTorque = motorForce;
+        rearRightWheelCollider.motorTorque = motorForce;*/
+        currentbreakForce = detectSwipe.isBreaking ? breakForce : 0f;
         ApplyBreaking();
     }
 
     private void ApplyBreaking()
     {
-        frontRightWheelCollider.brakeTorque = currentbreakForce;
-        frontLeftWheelCollider.brakeTorque = currentbreakForce;
+        //frontRightWheelCollider.brakeTorque = currentbreakForce;
+        //frontLeftWheelCollider.brakeTorque = currentbreakForce;
         rearLeftWheelCollider.brakeTorque = currentbreakForce;
         rearRightWheelCollider.brakeTorque = currentbreakForce;
     }
@@ -67,10 +69,13 @@ public class CarController : MonoBehaviour
         currentSteerAngle = maxSteerAngle * horizontalInput;
         frontLeftWheelCollider.steerAngle = currentSteerAngle;
         frontRightWheelCollider.steerAngle = currentSteerAngle;
+
+       // car.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     private void UpdateWheels()
     {
+       
         UpdateSingleWheel(frontLeftWheelCollider, frontLeftWheelTransform);
         UpdateSingleWheel(frontRightWheelCollider, frontRightWheeTransform);
         UpdateSingleWheel(rearRightWheelCollider, rearRightWheelTransform);
