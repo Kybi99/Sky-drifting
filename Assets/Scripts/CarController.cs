@@ -5,16 +5,15 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    private const string HORIZONTAL = "Horizontal";
-    private const string VERTICAL = "Vertical";
-
+    /*private const string HORIZONTAL = "Horizontal";
+    private const string VERTICAL = "Vertical";*/
     private float horizontalInput;
-    private float verticalInput;
+    //private float verticalInput;
     private float currentSteerAngle;
     private float currentbreakForce;
 
     [SerializeField] private DetectSwipe detectSwipe;
-   
+    [SerializeField] private Rigidbody carRB;
 
     [SerializeField] private float motorForce;
     [SerializeField] private float breakForce;
@@ -29,6 +28,9 @@ public class CarController : MonoBehaviour
     [SerializeField] private Transform frontRightWheeTransform;
     [SerializeField] private Transform rearLeftWheelTransform;
     [SerializeField] private Transform rearRightWheelTransform;
+
+    public static int maxSpeed = 15;
+
 
     private void FixedUpdate()
     {
@@ -48,12 +50,19 @@ public class CarController : MonoBehaviour
 
     private void HandleMotor()
     {
+        float speed = carRB.velocity.magnitude;
+
         frontLeftWheelCollider.motorTorque = motorForce;
         frontRightWheelCollider.motorTorque = motorForce;
+
+        Vector3 vel = carRB.velocity;
+
+        if (speed > maxSpeed)
+            carRB.velocity = vel.normalized * maxSpeed;
         /*rearLeftWheelCollider.motorTorque = motorForce;
         rearRightWheelCollider.motorTorque = motorForce;*/
-        currentbreakForce = detectSwipe.isBreaking ? breakForce : 0f;
-        ApplyBreaking();
+        //currentbreakForce = detectSwipe.isBreaking ? breakForce : 0f;
+        //ApplyBreaking();
     }
 
     private void ApplyBreaking()

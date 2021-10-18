@@ -13,12 +13,10 @@ public class SimpleCollectibleScript : MonoBehaviour {
 	public GameObject collectEffect;
 	public PointSystem pointSystem;
 
-	// Use this for initialization
 	void Start () {
 		
 	}
 	
-	// Update is called once per frame
 	void Update ()
 	{
 		if (rotate)
@@ -40,46 +38,11 @@ public class SimpleCollectibleScript : MonoBehaviour {
 		if(collectEffect)
 			Instantiate(collectEffect, transform.position, Quaternion.identity);
 
-		//Below is space to add in your code for what happens based on the collectible type
-
 		if (CollectibleType == CollectibleTypes.NoType)
 		{
-			Destroy(this);
 			pointSystem.CollectedPoints();
-			//Add in code here;
-
-			Debug.Log ("Do NoType Command");
 		}
-		if (CollectibleType == CollectibleTypes.Type1) 
-		{
-			//Add in code here;
-			Debug.Log ("Do NoType Command");
-		}
-		if (CollectibleType == CollectibleTypes.Type2) 
-		{
-			//Add in code here;
-
-			Debug.Log ("Do NoType Command");
-		}
-		if (CollectibleType == CollectibleTypes.Type3) 
-		{
-			//Add in code here;
-
-			Debug.Log ("Do NoType Command");
-		}
-		if (CollectibleType == CollectibleTypes.Type4) 
-		{
-			//Add in code here;
-
-			Debug.Log ("Do NoType Command");
-		}
-		if (CollectibleType == CollectibleTypes.Type5)
-		{
-			//Add in code here;
-
-			Debug.Log ("Do NoType Command");
-		}
-
+		
 		Destroy (gameObject);
 	}
 }

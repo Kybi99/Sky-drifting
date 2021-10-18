@@ -12,11 +12,13 @@ public class DetectSwipe : MonoBehaviour
     private bool stopTouch = false;
     private float swipeDistance;
 
+    public static bool firstTimeTapped;
+    public static int sensitivity = 4;
     public bool isBreaking;
+    public GameManager gameManger;
     [HideInInspector] public float xAxis;
     public float swipeRange;
     public float tapRange;
-
     [SerializeField] private Transform car;
 
 
@@ -37,27 +39,32 @@ public class DetectSwipe : MonoBehaviour
         {
             currentPosition = Input.GetTouch(0).position;
             distance = currentPosition - startTouchPosition;
-            swipeDistance = currentPosition.x / startTouchPosition.x;
+
+            if(currentPosition.x < startTouchPosition.x)
+                swipeDistance =  startTouchPosition.x / currentPosition.x  / sensitivity;
+            else if(currentPosition.x > startTouchPosition.x)
+                swipeDistance = currentPosition.x / startTouchPosition.x / sensitivity;
 
             if (swipeDistance > 1)
                 swipeDistance = 1;
-            else if(swipeDistance < -1)
-                swipeDistance = -1;
+
+           /* if(swipeDistance < 1)
+                swipeDistance = 1;*/
         }
 
         if (!stopTouch)
         {
             if (distance.x < -swipeRange)
             {
-                stopTouch = true;
+               // stopTouch = true;
                 xAxis = -swipeDistance; 
                // Debug.Log(xAxis);
             }
             else if (distance.x > swipeRange)
             {
-                stopTouch = true;
+                //stopTouch = true;
                 xAxis = swipeDistance;
-               // Debug.Log(xAxis);
+                //Debug.Log(xAxis);
             }
            /* else if (distance.y > swipeRange)
             {
@@ -67,7 +74,7 @@ public class DetectSwipe : MonoBehaviour
             else if (distance.y < -swipeRange)
             {
                 Debug.Log("down");
-                stopTouch = true;
+                //stopTouch = true;
                 isBreaking = true;
             }
         }
@@ -81,19 +88,26 @@ public class DetectSwipe : MonoBehaviour
             xAxis = 0;
             distance = Vector3.zero;
             currentPosition = Vector3.zero;
-            //car.rotation = Quaternion.identity;
- 
-            stopTouch = false;
+          //  car.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0, 0, 0));
+           //car.rotation = Quaternion.identity;
+
+            //stopTouch = false;
             //isBreaking = false;
 
-            //endTouchPosition = Input.GetTouch(0).position;
+            endTouchPosition = Input.GetTouch(0).position;
 
-            //distance = endTouchPosition - startTouchPosition;
+            distance = endTouchPosition - startTouchPosition;
 
-            /*if (Mathf.Abs(distance.x) < tapRange && Mathf.Abs(distance.y) < tapRange)
+            if (Mathf.Abs(distance.x) < tapRange && Mathf.Abs(distance.y) < tapRange)
             {
-                Debug.Log("tap");
-            }*/
+                Debug.Log(firstTimeTapped);
+
+                if (firstTimeTapped)
+                {
+                    gameManger.Unpause();
+                    firstTimeTapped = false;
+                }
+            }
         }
     }
 }
