@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -25,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (car.position.y < -20)
+        if (car.position.y < -10)
             UI.ResetScene();
 
         if (Time.timeScale == 1)

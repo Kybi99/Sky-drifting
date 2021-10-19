@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CarMovement : MonoBehaviour
@@ -33,9 +31,7 @@ public class CarMovement : MonoBehaviour
     }
 
     private void Update()
-    {
-        //speedInput = 0f;
-        
+    {  
         speedInput = 1 * forwardAccel * 1000f;
 
         turnInput = detectSwipe.xAxis;

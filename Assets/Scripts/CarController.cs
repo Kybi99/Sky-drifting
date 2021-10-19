@@ -1,14 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    /*private const string HORIZONTAL = "Horizontal";
-    private const string VERTICAL = "Vertical";*/
     private float horizontalInput;
-    //private float verticalInput;
     private float currentSteerAngle;
     private float currentbreakForce;
 
@@ -44,8 +38,6 @@ public class CarController : MonoBehaviour
     private void GetInput()
     {
         horizontalInput = detectSwipe.xAxis;
-        /*verticalInput = Input.GetAxis(VERTICAL);*/
-        //isBreaking = Input.touchCount > 1;
     }
 
     private void HandleMotor()
@@ -59,16 +51,10 @@ public class CarController : MonoBehaviour
 
         if (speed > maxSpeed)
             carRB.velocity = vel.normalized * maxSpeed;
-        /*rearLeftWheelCollider.motorTorque = motorForce;
-        rearRightWheelCollider.motorTorque = motorForce;*/
-        //currentbreakForce = detectSwipe.isBreaking ? breakForce : 0f;
-        //ApplyBreaking();
     }
 
     private void ApplyBreaking()
-    {
-        //frontRightWheelCollider.brakeTorque = currentbreakForce;
-        //frontLeftWheelCollider.brakeTorque = currentbreakForce;
+    { 
         rearLeftWheelCollider.brakeTorque = currentbreakForce;
         rearRightWheelCollider.brakeTorque = currentbreakForce;
     }
@@ -79,7 +65,6 @@ public class CarController : MonoBehaviour
         frontLeftWheelCollider.steerAngle = currentSteerAngle;
         frontRightWheelCollider.steerAngle = currentSteerAngle;
 
-       // car.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     private void UpdateWheels()
