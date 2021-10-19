@@ -23,7 +23,7 @@ public class CarController : MonoBehaviour
     [SerializeField] private Transform rearLeftWheelTransform;
     [SerializeField] private Transform rearRightWheelTransform;
 
-    public static int maxSpeed = 15;
+    public static int maxSpeed = 14;
 
 
     private void FixedUpdate()

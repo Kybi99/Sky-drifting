@@ -1,16 +1,28 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Cinemachine;
 
 public class UI : MonoBehaviour
 {
-    private static int numberOfObstacles = 0;
-    private static int numberOfCollectibles = 0;
+    private static int numberOfObstacles;
+    private static int numberOfCollectibles;
+    private string modeString;
+
+    public CameraFollow cameraFollow;
+    public GameObject inputTranslation;
+    public GameObject inputX;
+    public GameObject inputY;
+    public GameObject inputZ;
+    public GameObject inputRotation;
+    public CinemachineVirtualCamera vCam;
 
     public TMP_Text obstaclesNum;
     public TMP_Text collectiblesNum;
     public TMP_Text maxSpeed;
     public TMP_Text sens;
+    public TMP_Text mode;
 
     public GameObject settingsCanvas;
     public GameObject playModeCanvas;
@@ -19,13 +31,19 @@ public class UI : MonoBehaviour
     public GameObject[] obstacles;
     public GameObject[] collectibles;
 
-
+    private void Start()
+    {
+        numberOfObstacles = Convert.ToInt32(obstaclesNum.text);
+        numberOfCollectibles = Convert.ToInt32(collectiblesNum.text) / 28;
+        modeString = mode.text;
+    }
 
     private void Update()
     {
         obstaclesNum.text = numberOfObstacles.ToString();
-        collectiblesNum.text = numberOfCollectibles.ToString();
-        maxSpeed.text = CarController.maxSpeed.ToString();
+        collectiblesNum.text = (numberOfCollectibles * 28).ToString();
+        maxSpeed.text = (CarController.maxSpeed * 5).ToString() + "Km/h";
+
         if (settingsCanvas.activeSelf)
         {
             Time.timeScale = 0;
@@ -79,7 +97,11 @@ public class UI : MonoBehaviour
     public void IncrementObstacles()
     {
         numberOfObstacles++;
-        for(int i = 0; i < numberOfObstacles; i++)
+
+        if (numberOfObstacles > obstacles.Length)
+            numberOfObstacles = obstacles.Length;
+
+        for (int i = 0; i < numberOfObstacles; i++)
         {
             obstacles[i].SetActive(true);
         }
@@ -92,6 +114,10 @@ public class UI : MonoBehaviour
     public void DecrementObstacles()
     {
         numberOfObstacles--;
+
+        if (numberOfObstacles < 0)
+            numberOfObstacles = 0;
+
         for (int i = 0; i < numberOfObstacles; i++)
         {
             obstacles[i].SetActive(true);
@@ -105,6 +131,10 @@ public class UI : MonoBehaviour
     public void IncrementCollectibles()
     {
         numberOfCollectibles++;
+
+        if (numberOfCollectibles > collectibles.Length)
+            numberOfCollectibles = collectibles.Length;
+
         for (int i = 0; i < numberOfCollectibles; i++)
         {
             collectibles[i].SetActive(true);
@@ -117,6 +147,10 @@ public class UI : MonoBehaviour
     public void DecrementCollectibles()
     {
         numberOfCollectibles--;
+
+        if (numberOfObstacles < 0)
+            numberOfObstacles = 0;
+
         for (int i = 0; i < numberOfCollectibles; i++)
         {
             collectibles[i].SetActive(true);
@@ -131,25 +165,68 @@ public class UI : MonoBehaviour
     public void IncremenetSpeed()
     {
         CarController.maxSpeed++;
+        if (CarController.maxSpeed > 15)
+            CarController.maxSpeed = 15;
     }
     public void DecrementSpeed()
     {
         CarController.maxSpeed--;
+        if (CarController.maxSpeed < 13)
+            CarController.maxSpeed = 13;
     }
 
     public void IncrementStiffnes()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-
-        sens.text = "More stiffness";
+        if(modeString == "Easy")
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            sens.text = "Medium";
+        }
+        else if (modeString == "Medium")
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            sens.text = "Hard";
+        }
     }
     public void DecrementStiffness()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
-
-        sens.text = "Less stiffness";
-
+        if (modeString == "Medium")
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+            sens.text = "Easy";
+        }
+        else if (modeString == "Hard")
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+            sens.text = "Medium";
+        }
     }
 
+    public void SetCameraOffset()
+    {
+        string x;
+        string y;
+        string z;
+        if(inputTranslation.GetComponent<TMP_InputField>().text != "")
+            cameraFollow.translateSpeed = Convert.ToInt32(inputTranslation.GetComponent<TMP_InputField>().text);
+        if (inputX.GetComponent<TMP_InputField>().text != "" && inputZ.GetComponent<TMP_InputField>().text != "" && inputY.GetComponent<TMP_InputField>().text != "")
+        {
+            x = inputX.GetComponent<TMP_InputField>().text;
+            y = inputY.GetComponent<TMP_InputField>().text;
+            z = inputZ.GetComponent<TMP_InputField>().text;
+
+            cameraFollow.offset = new Vector3(Convert.ToInt32(x), Convert.ToInt32(y), Convert.ToInt32(z));
+        }
+        if (inputRotation.GetComponent<TMP_InputField>().text != "")
+            cameraFollow.rotationSpeed = Convert.ToInt32(inputRotation.GetComponent<TMP_InputField>().text);
+        
+        if(SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            var transposer = vCam.GetCinemachineComponent<CinemachineTransposer>();
+            transposer.m_FollowOffset = cameraFollow.offset;
+        }
+
+    }
+       
 
 }

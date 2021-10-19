@@ -20,9 +20,7 @@ public class CarMovement : MonoBehaviour
     public Transform groundRayPoint;
     public Transform leftFrontWheel;
     public Transform rightFrontWheel;
-    public ParticleSystem[] dustTrail;
     public DetectSwipe detectSwipe;
-    public float maxEmission = 25f;
     public Transform car;
 
     void Start()
@@ -76,19 +74,11 @@ public class CarMovement : MonoBehaviour
             if(Mathf.Abs(speedInput)> 0 )
             {
                 theRB.AddForce(transform.forward * speedInput);
-
-                emissionRate = maxEmission;
             }
             else
             {
                 theRB.drag = 0.1f;
                 theRB.AddForce(Vector3.up * -gravityForce * 100f);
-            }
-
-            foreach(ParticleSystem part in dustTrail)
-            {
-                var emissionModule = part.emission;
-                emissionModule.rateOverTime = emissionRate;
             }
         }
     }

@@ -72,7 +72,7 @@ public class DetectSwipe : MonoBehaviour
 
             if (Mathf.Abs(distance.x) < tapRange && Mathf.Abs(distance.y) < tapRange)
             {
-                Debug.Log(firstTimeTapped);
+                //Debug.Log(firstTimeTapped);
 
                 if (firstTimeTapped)
                 {
